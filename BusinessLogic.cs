@@ -22,9 +22,9 @@ public class BusinessLogic : IBusinessLogic
 {
     // The BusinessLogic class talks to the Database
     private Database database;
-    private const int bronze = 42;
-    private const int silver = 84;
-    private const int gold = 125;
+    private const int bronzeThreshold = 42;
+    private const int silverThreshold = 84;
+    private const int goldThreshold = 125;
 
     // Create an observable collection of airports that returns the database method of all the airports
     public ObservableCollection<Airport> Airports
@@ -89,8 +89,8 @@ public class BusinessLogic : IBusinessLogic
     public bool EditAirport(string id, string city, DateTime dateVisited, int rating)
     {
         // Create a new airport object and return updated airport
-        Airport airport = new Airport(id, city, dateVisited, rating);
-        return database.UpdateAirport(airport, city, dateVisited, rating);
+        //Airport airport = new Airport(id, city, dateVisited, rating);
+        return database.UpdateAirport(new Airport(id, city, dateVisited, rating), city, dateVisited, rating);
 
     }
 
@@ -109,37 +109,32 @@ public class BusinessLogic : IBusinessLogic
     /// <returns> A string that tells the user how many airports they have visited and their next threshold</returns>
     public string CalculateStatistics()
     {
-        // set a variable to get the count of how many airports have been added
-        int airportCount = GetAirports().Count();
+            // thresholds for levels and airport count
+            int airportCount = Airports.Count;
 
-
-        // Check the number of airports for respective medal
-        if (airportCount == 1)
-        {
-            return (airportCount + " airport visited; " + (bronze - airportCount) + " airports remaining until reaching bronze");
+            // calculates status level of pilot based on # of airports entered
+            if (airportCount < bronzeThreshold)
+            {
+                return string.Format("%d airports visited %d airports remaining until achieving Bronze\n", airportCount, (bronzeThreshold - airportCount));
+            }
+            else if (airportCount < silverThreshold)
+            {
+                return string.Format("%d airports visited %d airports remaining until achieving Silver\n", airportCount, (silverThreshold - airportCount));
+            }
+            else if (airportCount < goldThreshold)
+            {
+                return string.Format("%d airports visited %d airports remaining until achieving Gold\n", airportCount, (goldThreshold - airportCount));
+            }
+            else
+            {
+                return (airportCount + " airports visited; Congrats you have visited all Airports!\n");
+            }
         }
-        if (airportCount < bronze)
-        {
-            return (airportCount + " airports visited; " + (bronze - airportCount) + " airports remaining until reaching bronze");
-        }
-        else if (airportCount < silver)
-        {
-            return (airportCount + " airports visited; " + (silver - airportCount) + " airports remaining until reaching silver");
-        }
-        else if (airportCount < gold)
-        {
-            return (airportCount + " airports visited; " + (gold - airportCount) + " airports remaining until reaching gold");
-        }
-        else
-        {
-            return (airportCount + " airports visited; Congrats you have visited all of the Airports in Wisconsin");
-        }
-    }
-    /// <summary>
-    /// Calls the database method to select every airport
-    /// </summary>
-    /// <returns> An observable collection of airports</returns>
-    public ObservableCollection<Airport> GetAirports()
+        /// <summary>
+        /// Calls the database method to select every airport
+        /// </summary>
+        /// <returns> An observable collection of airports</returns>
+        public ObservableCollection<Airport> GetAirports()
     {
         // This is the businesslogic talking to the database
         return database.SelectAllAirports();

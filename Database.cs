@@ -103,21 +103,22 @@ public class Database : IDatabase
     }
 
     // Updates an existing airport's information.
-    public bool UpdateAirport(Airport airportToUpdate, String city, DateTime DateVisited, int rating)
+    public bool UpdateAirport(Airport airportToUpdate, string city, DateTime dateVisited, int rating)
     {
         try
         {
             using var conn = new NpgsqlConnection(connString); // conn, short for connection, is a connection to the database
             conn.Open(); // open the connection ... now we are connected!
 
-            var cmd = new NpgsqlCommand(); // create the sql commaned
+            var cmd = new NpgsqlCommand(); // create the SQL command
             cmd.Connection = conn; // commands need a connection, an actual command to execute
-            cmd.CommandText = "UPDATE airpots SET DateVisited = @DateVisited, city = @city, rating = @rating WHERE id = @id;";
+            cmd.CommandText = "UPDATE airports SET DateVisited = @DateVisited, city = @City, rating = @Rating WHERE id = @Id";
 
-            cmd.Parameters.AddWithValue("id", airportToUpdate.Id);
-            cmd.Parameters.AddWithValue("city", city);
-            cmd.Parameters.AddWithValue("DateVisited", DateVisited);
-            cmd.Parameters.AddWithValue("rating", rating); //I don't know if the city, date, and rating need to have airportToUpdate
+            cmd.Parameters.AddWithValue("Id", airportToUpdate.Id);
+            cmd.Parameters.AddWithValue("City", city);
+            cmd.Parameters.AddWithValue("DateVisited", dateVisited);
+            cmd.Parameters.AddWithValue("Rating", rating);
+
             var numAffected = cmd.ExecuteNonQuery();
             SelectAllAirports();
         }
@@ -127,10 +128,12 @@ public class Database : IDatabase
             return false;
         }
         return true;
-
     }
-    // Builds a ConnectionString, which is used to connect to the database
-    static String GetConnectionString()
+
+
+
+// Builds a ConnectionString, which is used to connect to the database
+static String GetConnectionString()
     {
         var connStringBuilder = new NpgsqlConnectionStringBuilder();
         connStringBuilder.Host = "acid-mummy-13033.5xj.cockroachlabs.cloud";

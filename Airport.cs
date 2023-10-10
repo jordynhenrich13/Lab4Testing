@@ -43,7 +43,7 @@ namespace Lab2
                 if (value.Length == 4 && value[0] == 'K')
                 {
                     id = value;
-                    OnPropertyChanged(nameof(Id));
+                    OnPropertyChanged(nameof(id));
                 }
                 else
                 {
