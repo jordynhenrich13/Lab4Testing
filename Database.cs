@@ -109,13 +109,15 @@ public class Database : IDatabase
         {
             using var conn = new NpgsqlConnection(connString); // conn, short for connection, is a connection to the database
             conn.Open(); // open the connection ... now we are connected!
+
             var cmd = new NpgsqlCommand(); // create the sql commaned
             cmd.Connection = conn; // commands need a connection, an actual command to execute
-            cmd.CommandText = "UPDATE airpots SET DateVisited = @DateVisited, City = @City, Rating = @Rating WHERE Id = @Id;";
-            cmd.Parameters.AddWithValue("Id", airportToUpdate.Id);
-            cmd.Parameters.AddWithValue("City", airportToUpdate.City);
-            cmd.Parameters.AddWithValue("DateVisited", airportToUpdate.DateVisited);
-            cmd.Parameters.AddWithValue("Rating", airportToUpdate.Rating); //I don't know if the city, date, and rating need to have airportToUpdate
+            cmd.CommandText = "UPDATE airpots SET DateVisited = @DateVisited, city = @city, rating = @rating WHERE id = @id;";
+
+            cmd.Parameters.AddWithValue("id", airportToUpdate.Id);
+            cmd.Parameters.AddWithValue("city", city);
+            cmd.Parameters.AddWithValue("DateVisited", DateVisited);
+            cmd.Parameters.AddWithValue("rating", rating); //I don't know if the city, date, and rating need to have airportToUpdate
             var numAffected = cmd.ExecuteNonQuery();
             SelectAllAirports();
         }

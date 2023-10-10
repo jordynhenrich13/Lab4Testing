@@ -8,9 +8,7 @@ namespace Lab4Testing
         {
            
             BusinessLogic businessLogic = new BusinessLogic();
-            businessLogic.AddAirport("KFLD", "Fond du Lac", new DateTime(2023, 9, 18), 5);
-            Airport airport = businessLogic.FindAirport("KFLD");
-            Console.WriteLine(airport.ToString());
+           
             Console.WriteLine("Hello, World!");
         }
     }
